@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 from dataclasses import dataclass
+from dataclass_csv import DataclassWriter
 from decimal import Decimal
 from faker import Faker
 
@@ -9,6 +10,7 @@ fake = Faker()
 credit_bureaus = ["CreditBureauA", "CreditBureauB", "CreditBureauC"]
 
 
+##########################################################################################
 @dataclass
 class County:
     id: int
@@ -24,7 +26,14 @@ class County:
         )
         self.postcode = fake.postcode()
 
+@dataclass
+class Counties:
+    list_items: list[County]
 
+    def __init__(self, items=10):
+        self.list_items = [County(id=i) for i in range(0, items)]
+
+##########################################################################################
 @dataclass
 class Property:
     id: int
@@ -42,6 +51,14 @@ class Property:
 
 
 @dataclass
+class Properties:
+    list_items: list[Property]
+
+    def __init__(self, items=10):
+        self.list_items = [Property(id=i) for i in range(0, items)]
+
+##########################################################################################
+@dataclass
 class Owner:
     id: int
     name: str
@@ -52,11 +69,18 @@ class Owner:
         self.name = fake.name()
         self.ssn = fake.ssn()
 
+@dataclass
+class Owners:
+    list_items: list[Owner]
 
+    def __init__(self, items=10):
+        self.list_items = [Owner(id=i) for i in range(0, items)]
+
+##########################################################################################
 @dataclass
 class CreditReport:
     id: int
-    score: str
+    score: int
     bureau: str
 
     def __init__(self, id):
@@ -65,12 +89,28 @@ class CreditReport:
         self.bureau = fake.random_element(elements=credit_bureaus)
 
 
+@dataclass
+class CreditReports:
+    list_items: list[CreditReport]
+
+    def __init__(self, items=10):
+        self.list_items = [CreditReport(id=i) for i in range(0, items)]
+
+
+##########################################################################################
+# This is a generic write function
+def writecsv(l, c, outfile):
+    with open(outfile, "w") as f:
+        w = DataclassWriter(f, l.list_items, c)
+        w.write()
+
+
 if __name__ == "__main__":
-    owners = [Owner(id=i) for i in range(0, 10)]
-    counties = [County(id=i) for i in range(0, 10)]
-    properties = [Property(id=i) for i in range(0, 10)]
-    credit_reports = [CreditReport(id=i) for i in range(0, 10)]
-    print(owners)
-    print(properties)
-    print(counties)
-    print(credit_reports)
+    owners = Owners()
+    counties = Counties()
+    properties = Properties(items=100)
+    credit_reports = CreditReports(items=10000)
+    writecsv(credit_reports, CreditReport, "credit_reports.csv")
+    writecsv(owners, Owner, "owners.csv")
+    writecsv(properties, Property, "properties.csv")
+    writecsv(counties, County, "counties.csv")

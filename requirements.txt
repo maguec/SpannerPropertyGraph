@@ -1,1 +1,3 @@
 Faker
+setuptools
+dataclass_csv
