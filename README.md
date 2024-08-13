@@ -16,3 +16,16 @@ gcloud spanner databases create propertydb --instance  properties --ddl-file=Pro
 
 ```
 
+## Setup Python environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt 
+```
+
+## Generate the CSV Datafiles
+
+```bash
+python ./generate_data.py
+```
