@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from decimal import Decimal
 from faker import Faker
 
+from models.utils import typemap
+
 fake = Faker()
 
 credit_bureaus = ["CreditBureauA", "CreditBureauB", "CreditBureauC"]
@@ -33,6 +35,12 @@ class Counties:
     def __init__(self, items=10):
         self.list_items = [County(id=i) for i in range(0, items)]
 
+    def genddl(self):
+        c = County(id=-1)
+        print("CREATE TABLE {} (".format(c.__class__.__name__))
+        for field in County.__dataclass_fields__:
+            print("  {}\t\t{}".format(field,typemap(type(getattr(c, field)).__name__)))
+
 
 ##########################################################################################
 @dataclass
@@ -40,7 +48,7 @@ class Property:
     id: int
     address: str
     bedrooms: int
-    bathrooms: Decimal
+    bathrooms: int
     price: int
 
     def __init__(self, id):
