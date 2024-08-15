@@ -1,3 +1,4 @@
 Faker
 setuptools
 dataclass_csv
+jinja2
