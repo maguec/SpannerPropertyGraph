@@ -12,7 +12,7 @@ fake = Faker()
 credit_bureaus = ["CreditBureauA", "CreditBureauB", "CreditBureauC"]
 
 NODE_DDL_TEMPLATE = Template(
-        """CREATE TABLE {{name}} (
+    """CREATE TABLE {{name}} (
     {% for field in fields -%}
     {{field}},
     {% endfor -%}
@@ -50,11 +50,11 @@ class Counties:
         name = c.__class__.__name__
         fields = []
         for field in County.__dataclass_fields__:
-            fields.append("  {}\t\t{}".format(field,typemap(type(getattr(c, field)).__name__)))
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
         tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
-        return(tmpl)
-        
-
+        return tmpl
 
 
 ##########################################################################################
@@ -86,10 +86,11 @@ class Properties:
         name = c.__class__.__name__
         fields = []
         for field in Property.__dataclass_fields__:
-            fields.append("  {}\t\t{}".format(field,typemap(type(getattr(c, field)).__name__)))
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
         tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
-        return(tmpl)
-        
+        return tmpl
 
 
 ##########################################################################################
@@ -117,10 +118,11 @@ class Owners:
         name = c.__class__.__name__
         fields = []
         for field in Owner.__dataclass_fields__:
-            fields.append("  {}\t\t{}".format(field,typemap(type(getattr(c, field)).__name__)))
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
         tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
-        return(tmpl)
-        
+        return tmpl
 
 
 ##########################################################################################
@@ -148,7 +150,8 @@ class CreditReports:
         name = c.__class__.__name__
         fields = []
         for field in CreditReport.__dataclass_fields__:
-            fields.append("  {}\t\t{}".format(field,typemap(type(getattr(c, field)).__name__)))
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
         tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
-        return(tmpl)
-        
+        return tmpl
