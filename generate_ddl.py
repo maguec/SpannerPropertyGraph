@@ -14,5 +14,15 @@ if __name__ == "__main__":
     full_ddl.append(owners.genddl())  # owners.genddl()
     credit_reports = CreditReports()
     full_ddl.append(credit_reports.genddl())  # credit_reports.genddl()
+    credit_edges = CreditEdges(owners, credit_reports)
+    full_ddl.append(credit_edges.genddl())  # credit_edges.genddl()
+    county_edges = CountyEdges(properties, counties)
+    full_ddl.append(county_edges.genddl())  # county_edges.genddl()
+    property_edges = PropertyEdges(properties, owners)
+    full_ddl.append(property_edges.genddl())  # property_edges.genddl()
+    full_ddl.append(property_edges.gendeclarationddl())
+    full_ddl.append(county_edges.gendeclarationddl())
+    full_ddl.append(credit_edges.gendeclarationddl())
+    
 
     print("\n".join(full_ddl))

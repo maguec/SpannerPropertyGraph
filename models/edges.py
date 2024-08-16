@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from faker import Faker
-from Jinja2 import Template
+from jinja2 import Template
+from models.utils import typemap
 
 fake = Faker()
 
@@ -71,6 +72,32 @@ class CountyEdges:
             label="IN_COUNTY",
         )
 
+    def genddl(self):
+        c = InCounty(id=-1, countylen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in InCounty.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
+
+    def gendeclarationddl(self):
+        c = InCounty(id=-1, countylen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in InCounty.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
+
 
 ##########################################################################################
 @dataclass
@@ -104,6 +131,31 @@ class PropertyEdges:
             label="HAS_OWNER",
         )
 
+    def genddl(self):
+        c = HasOwner(id=-1, propertylen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasOwner.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
+    def gendeclarationddl(self):
+        c = HasOwner(id=-1, propertylen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasOwner.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
+
 
 ##########################################################################################
 @dataclass
@@ -136,3 +188,28 @@ class CreditEdges:
             fkid="report_id",
             label="HAS_CREDIT_REPORT",
         )
+
+    def genddl(self):
+        c = HasCreditReport(id=-1, ownerlen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasCreditReport.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
+    def gendeclarationddl(self):
+        c = HasCreditReport(id=-1, ownerlen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasCreditReport.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+        )
+        return tmpl
