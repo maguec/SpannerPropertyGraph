@@ -10,3 +10,6 @@ genschema:
 loadschema:
 	@echo "Loading Schema"
 	@gcloud spanner databases create propertydb --instance  properties --ddl-file=PropertyGraphDDL.sql
+
+clean:
+	@rm *.csv
