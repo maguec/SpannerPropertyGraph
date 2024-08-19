@@ -12,6 +12,6 @@ def typemap(t):
     tmap = {
         "int": "INT64 NOT NULL",
         "str": "STRING(MAX)",
-        "Decimal": "DECIMAL",
+        "Decimal": "NUMERIC",  # https://cloud.google.com/spanner/docs/working-with-numerics
     }
     return tmap[t]

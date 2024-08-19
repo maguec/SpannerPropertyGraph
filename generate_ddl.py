@@ -22,6 +22,7 @@ if __name__ == "__main__":
     property_edges = PropertyEdges(properties, owners)
     full_ddl.append(property_edges.genddl())  # property_edges.genddl()
     full_ddl.append("-- Graph Declaration")
+    full_ddl.append("CREATE OR REPLACE PROPERTY GRAPH ProperyGraph")
     full_ddl.append("  NODE TABLES (")
     full_ddl.append(
         "    "

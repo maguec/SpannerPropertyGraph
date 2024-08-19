@@ -15,7 +15,7 @@ CREATE TABLE {{name}} (
     {% for field in fields -%}
     {{field}},
     {% endfor -%}
-  FOREIGN KEY ({{fkid}}) REFERENCES Account (id)
+  FOREIGN KEY ({{fkid}}) REFERENCES {{parent}} (id)
 ) PRIMARY KEY (id, {{fkid}}),
   INTERLEAVE IN PARENT {{parent}} ON DELETE CASCADE;
 """
