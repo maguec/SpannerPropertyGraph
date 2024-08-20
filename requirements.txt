@@ -2,3 +2,4 @@ Faker
 setuptools
 dataclass_csv
 jinja2
+google-cloud-spanner

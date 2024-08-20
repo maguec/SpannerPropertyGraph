@@ -3,10 +3,15 @@
 from models.nodes import *
 from models.edges import *
 from models.utils import *
+from google.cloud import spanner
 
 if __name__ == "__main__":
+    s = spanner.Client()
+    instance = s.instance("properties")
+    client = instance.database("propertydb")
     owners = Owners(items=100)
     counties = Counties(items=40)
+    client.run_in_transaction(counties.writeSpanner)
     properties = Properties(items=200)
     credit_reports = CreditReports(items=len(owners.list_items))
     writecsv(credit_reports, CreditReport, "credit_reports.csv")
