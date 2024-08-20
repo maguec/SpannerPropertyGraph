@@ -37,10 +37,9 @@ if __name__ == "__main__":
     )
     full_ddl.append("  )")
     full_ddl.append("  EDGE TABLES (")
-    full_ddl.append("    " + property_edges.gendeclarationddl())
-    full_ddl.append("    " + county_edges.gendeclarationddl())
+    full_ddl.append("    " + property_edges.gendeclarationddl() + ",")
+    full_ddl.append("    " + county_edges.gendeclarationddl()+ ",")
     full_ddl.append("    " + credit_edges.gendeclarationddl())
-    full_ddl.append("  )")
     full_ddl.append(");")
 
     print("\n".join(full_ddl))
