@@ -18,3 +18,12 @@ clean: ## Remove all generated files
 	@rm -f *.csv
 	@find . -name \*.pyc -delete
 	@find . -name __pycache__ -delete
+
+dbclean: ## Remove all  table dat
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from Owner WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from Property WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from CreditReport WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from County WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from InCounty WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from HasCreditReport WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from HasOwner WHERE id < 100000000;'
