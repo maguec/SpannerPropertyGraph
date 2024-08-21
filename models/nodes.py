@@ -45,19 +45,6 @@ class Counties:
     def __init__(self, items=10):
         self.list_items = [County(id=i) for i in range(0, items)]
 
-    def writeSpanner(self, transaction, batch=10):
-        rows = []
-        columns = County.__dataclass_fields__.keys()
-        for item in self.list_items:
-            #rows.append((item.id, item.name, item.tax_rate, item.postcode))
-            rows.append(tuple(item.__dict__.values()))
-            if len(rows) % batch == 0:
-                transaction.insert(table="County", columns=columns, values=rows)
-                print("wrote {} rows".format(len(rows)))
-                rows = []
-        if len(rows) > 0:
-            transaction.insert(table="County", columns=columns, values=rows)
-
     def genddl(self):
         c = County(id=-1)
         name = c.__class__.__name__

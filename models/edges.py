@@ -49,8 +49,8 @@ class InCounty:
 
     def __init__(self, id, countylen, propertylen):
         self.id = id
-        self.county_id = fake.random_int(min=1, max=countylen)
-        self.property_id = fake.random_int(min=1, max=propertylen)
+        self.county_id = fake.random_int(min=0, max=countylen-1)
+        self.property_id = fake.random_int(min=0, max=propertylen-1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -111,8 +111,8 @@ class HasOwner:
 
     def __init__(self, id, propertylen, ownerlen):
         self.id = id
-        self.owner_id = fake.random_int(min=1, max=ownerlen)
-        self.property_id = fake.random_int(min=1, max=propertylen)
+        self.owner_id = fake.random_int(min=0, max=ownerlen-1)
+        self.property_id = fake.random_int(min=0, max=propertylen-1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -170,7 +170,7 @@ class HasCreditReport:
 
     def __init__(self, id, ownerlen):
         self.id = id
-        self.report_id = fake.random_int(min=1, max=ownerlen)
+        self.report_id = fake.random_int(min=0, max=ownerlen-1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=1),
             datetime_end=datetime.now(),
