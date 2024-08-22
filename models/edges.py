@@ -24,9 +24,9 @@ CREATE TABLE {{name}} (
 EDGE_TABLE_DECLARATION_DDL_TEMPLATE = Template(
     """
 {{name}}
-      SOURCE KEY (id) REFERENCES {{partent}} (id)
-      DESTINATION KEY ({{fkid}}) REFERENCES {{partent}} (id)
-      LABEL {{name}}
+      SOURCE KEY (id) REFERENCES {{parent}} (id)
+      DESTINATION KEY ({{fkid}}) REFERENCES {{target}} (id)
+      LABEL {{label}}
 """
 )
 
@@ -37,6 +37,7 @@ class EdgeMetaData:
     parent: str
     fkid: str
     label: str
+    target: str
 
 
 ##########################################################################################
@@ -49,8 +50,8 @@ class InCounty:
 
     def __init__(self, id, countylen, propertylen):
         self.id = id
-        self.county_id = fake.random_int(min=0, max=countylen-1)
-        self.property_id = fake.random_int(min=0, max=propertylen-1)
+        self.county_id = fake.random_int(min=0, max=countylen - 1)
+        self.property_id = fake.random_int(min=0, max=propertylen - 1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -72,6 +73,7 @@ class CountyEdges:
             parent="Property",
             fkid="property_id",
             label="IN_COUNTY",
+            target="County"
         )
 
     def genddl(self):
@@ -83,7 +85,10 @@ class CountyEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
-            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
         )
         return tmpl
 
@@ -96,7 +101,12 @@ class CountyEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
-            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            target=self.metadata.target,
         )
         return tmpl
 
@@ -111,8 +121,8 @@ class HasOwner:
 
     def __init__(self, id, propertylen, ownerlen):
         self.id = id
-        self.owner_id = fake.random_int(min=0, max=ownerlen-1)
-        self.property_id = fake.random_int(min=0, max=propertylen-1)
+        self.owner_id = fake.random_int(min=0, max=ownerlen - 1)
+        self.property_id = fake.random_int(min=0, max=propertylen - 1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -133,6 +143,7 @@ class PropertyEdges:
             parent="Property",
             fkid="owner_id",
             label="HAS_OWNER",
+            target="Owner",
         )
 
     def genddl(self):
@@ -144,9 +155,13 @@ class PropertyEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
-            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
         )
         return tmpl
+
     def gendeclarationddl(self):
         c = HasOwner(id=-1, propertylen=1, ownerlen=1)
         name = c.__class__.__name__
@@ -156,7 +171,12 @@ class PropertyEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
-            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            target=self.metadata.target,
         )
         return tmpl
 
@@ -170,7 +190,7 @@ class HasCreditReport:
 
     def __init__(self, id, ownerlen):
         self.id = id
-        self.report_id = fake.random_int(min=0, max=ownerlen-1)
+        self.report_id = fake.random_int(min=0, max=ownerlen - 1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=1),
             datetime_end=datetime.now(),
@@ -191,6 +211,7 @@ class CreditEdges:
             parent="Owner",
             fkid="report_id",
             label="HAS_CREDIT_REPORT",
+            target="CreditReport"
         )
 
     def genddl(self):
@@ -202,9 +223,13 @@ class CreditEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
-            name=name, fields=fields, parent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
         )
         return tmpl
+
     def gendeclarationddl(self):
         c = HasCreditReport(id=-1, ownerlen=1)
         name = c.__class__.__name__
@@ -214,6 +239,11 @@ class CreditEdges:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
-            name=name, fields=fields, partent=self.metadata.parent,fkid=self.metadata.fkid
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            target=self.metadata.target,
         )
         return tmpl

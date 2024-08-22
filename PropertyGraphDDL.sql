@@ -50,7 +50,7 @@ CREATE TABLE HasOwner (
 ) PRIMARY KEY (id, owner_id),
   INTERLEAVE IN PARENT Property ON DELETE CASCADE;
 -- Graph Declaration
-CREATE OR REPLACE PROPERTY GRAPH ProperyGraph
+CREATE OR REPLACE PROPERTY GRAPH PropertyGraph
   NODE TABLES (
     County,
     Property,
@@ -61,16 +61,16 @@ CREATE OR REPLACE PROPERTY GRAPH ProperyGraph
     
 HasOwner
       SOURCE KEY (id) REFERENCES Property (id)
-      DESTINATION KEY (owner_id) REFERENCES Property (id)
-      LABEL HasOwner,
+      DESTINATION KEY (owner_id) REFERENCES Owner (id)
+      LABEL HAS_OWNER,
     
 InCounty
       SOURCE KEY (id) REFERENCES Property (id)
-      DESTINATION KEY (property_id) REFERENCES Property (id)
-      LABEL InCounty,
+      DESTINATION KEY (property_id) REFERENCES County (id)
+      LABEL IN_COUNTY,
     
 HasCreditReport
       SOURCE KEY (id) REFERENCES Owner (id)
-      DESTINATION KEY (report_id) REFERENCES Owner (id)
-      LABEL HasCreditReport
+      DESTINATION KEY (report_id) REFERENCES CreditReport (id)
+      LABEL HAS_CREDIT_REPORT
 );
