@@ -1,5 +1,8 @@
 from dataclass_csv import DataclassWriter
 from sys import exit
+from faker import Faker
+
+fake = Faker()
 
 
 ##########################################################################################
@@ -8,6 +11,7 @@ def writecsv(l, c, outfile):
     with open(outfile, "w") as f:
         w = DataclassWriter(f, l.list_items, c)
         w.write()
+
 
 def typemap(t):
     tmap = {
@@ -23,19 +27,37 @@ def writeSpanner(transaction, c, batch=1000):
     print("Writing {} to Spanner".format(c.list_items[0].__class__.__name__))
     columns = c.list_items[0].__dataclass_fields__.keys()
     for item in c.list_items:
-        #rows.append((item.id, item.name, item.tax_rate, item.postcode))
+        # rows.append((item.id, item.name, item.tax_rate, item.postcode))
         rows.append(tuple(item.__dict__.values()))
         if len(rows) % batch == 0:
             try:
-                transaction.insert(table=c.list_items[0].__class__.__name__, columns=columns, values=rows)
+                transaction.insert(
+                    table=c.list_items[0].__class__.__name__,
+                    columns=columns,
+                    values=rows,
+                )
                 print("wrote {} rows".format(len(rows)))
                 rows = []
             except:
                 exit(1)
     if len(rows) > 0:
         try:
-            transaction.insert(table=c.list_items[0].__class__.__name__, columns=columns, values=rows)
+            transaction.insert(
+                table=c.list_items[0].__class__.__name__, columns=columns, values=rows
+            )
             print("wrote {} rows".format(len(rows)))
         except:
             print(rows)
             exit(1)
+
+
+def oneToManyGen(srcLen, destLen, theRandom):
+    conns = []
+    for i in range(0, srcLen):
+        for j in range(0, fake.random_int(min=1, max=theRandom)):
+            while True:
+                dest = fake.random_int(min=0, max=destLen - 1)
+                if dest != i:
+                    conns.append((i, dest))
+                    break
+    return set(conns)  # use a set to ensure unique relationships

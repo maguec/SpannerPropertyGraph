@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from faker import Faker
 from jinja2 import Template
-from models.utils import typemap
+from models.utils import typemap, oneToManyGen
 
 fake = Faker()
 
@@ -235,6 +235,74 @@ class CreditEdges:
         name = c.__class__.__name__
         fields = []
         for field in HasCreditReport.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            target=self.metadata.target,
+        )
+        return tmpl
+##########################################################################################
+# Social Graph
+@dataclass
+class HasSocial:
+    id: int
+    owner_id: int
+    since: str
+
+    def __init__(self, id, ownerlen):
+        self.id = id
+        self.owner_id = fake.random_int(min=0, max=ownerlen - 1)
+        self.since = fake.date_time_between_dates(
+            datetime_start=datetime.now() - relativedelta(years=15),
+            datetime_end=datetime.now(),
+        ).strftime("%Y-%m-%d %H:%M:%S")
+
+
+@dataclass
+class CreditEdges:
+    list_items: list[HasSocial]
+
+    def __init__(self, ownerList):
+        self.list_items = oneToManyGen(len(ownerList.list_items), len(ownerList.list_items), 9)
+
+            # TODO: Insert a randomizing social function here
+            # HasSocial(i, len(ownerList.list_items))
+            # for i in range(0, len(ownerList.list_items))
+        self.metadata = EdgeMetaData(
+            name="HasSocial",
+            parent="Owner",
+            fkid="owner_id",
+            label="KNOWS",
+            target="Owner"
+        )
+
+    def genddl(self):
+        c = HasSocial(id=-1, ownerlen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasSocial.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+        )
+        return tmpl
+
+    def gendeclarationddl(self):
+        c = HasSocial(id=-1, ownerlen=1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasSocial.__dataclass_fields__:
             fields.append(
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
