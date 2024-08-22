@@ -29,3 +29,7 @@ pip install -r requirements.txt
 ```bash
 python ./generate_data.py
 ```
+
+## Check out some of the queries you can run
+
+[Queries](./SampleQueries.md)
