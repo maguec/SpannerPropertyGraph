@@ -24,6 +24,14 @@ CREATE TABLE CreditReport (
     ) PRIMARY KEY (id);
 -- Edge Tables
 
+CREATE TABLE HasSocial (
+      id		INT64 NOT NULL,
+      dest_owner		INT64 NOT NULL,
+      since		STRING(MAX),
+    FOREIGN KEY (dest_owner) REFERENCES Owner (id)
+) PRIMARY KEY (id, dest_owner),
+  INTERLEAVE IN PARENT Owner ON DELETE CASCADE;
+
 CREATE TABLE HasCreditReport (
       id		INT64 NOT NULL,
       report_id		INT64 NOT NULL,
@@ -68,6 +76,11 @@ InCounty
       SOURCE KEY (id) REFERENCES Property (id)
       DESTINATION KEY (property_id) REFERENCES County (id)
       LABEL IN_COUNTY,
+    
+HasSocial
+      SOURCE KEY (id) REFERENCES Owner (id)
+      DESTINATION KEY (dest_owner) REFERENCES Owner (id)
+      LABEL KNOWS,
     
 HasCreditReport
       SOURCE KEY (id) REFERENCES Owner (id)

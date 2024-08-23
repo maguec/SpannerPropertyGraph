@@ -23,3 +23,6 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner, has_owner)
     has_credit = CreditEdges(owners, credit_reports)
     client.run_in_transaction(writeSpanner, has_credit)
+    social = SocialEdges(owners)
+    client.run_in_transaction(writeSpanner, social)
+    

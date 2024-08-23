@@ -24,7 +24,7 @@ CREATE TABLE {{name}} (
 EDGE_TABLE_DECLARATION_DDL_TEMPLATE = Template(
     """
 {{name}}
-      SOURCE KEY (id) REFERENCES {{parent}} (id)
+      SOURCE KEY ({{ source }}) REFERENCES {{parent}} (id)
       DESTINATION KEY ({{fkid}}) REFERENCES {{target}} (id)
       LABEL {{label}}
 """
@@ -38,6 +38,7 @@ class EdgeMetaData:
     fkid: str
     label: str
     target: str
+    source: str
 
 
 ##########################################################################################
@@ -73,6 +74,7 @@ class CountyEdges:
             parent="Property",
             fkid="property_id",
             label="IN_COUNTY",
+            source="id",
             target="County"
         )
 
@@ -106,6 +108,7 @@ class CountyEdges:
             parent=self.metadata.parent,
             fkid=self.metadata.fkid,
             label=self.metadata.label,
+            source=self.metadata.source,
             target=self.metadata.target,
         )
         return tmpl
@@ -143,6 +146,7 @@ class PropertyEdges:
             parent="Property",
             fkid="owner_id",
             label="HAS_OWNER",
+            source="id",
             target="Owner",
         )
 
@@ -176,6 +180,7 @@ class PropertyEdges:
             parent=self.metadata.parent,
             fkid=self.metadata.fkid,
             label=self.metadata.label,
+            source=self.metadata.source,
             target=self.metadata.target,
         )
         return tmpl
@@ -211,6 +216,7 @@ class CreditEdges:
             parent="Owner",
             fkid="report_id",
             label="HAS_CREDIT_REPORT",
+            source="id",
             target="CreditReport"
         )
 
@@ -244,6 +250,7 @@ class CreditEdges:
             parent=self.metadata.parent,
             fkid=self.metadata.fkid,
             label=self.metadata.label,
+            source=self.metadata.source,
             target=self.metadata.target,
         )
         return tmpl
@@ -252,12 +259,12 @@ class CreditEdges:
 @dataclass
 class HasSocial:
     id: int
-    owner_id: int
+    dest_owner: int
     since: str
 
-    def __init__(self, id, ownerlen):
+    def __init__(self, id, dest):
         self.id = id
-        self.owner_id = fake.random_int(min=0, max=ownerlen - 1)
+        self.dest_owner = dest
         self.since = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=15),
             datetime_end=datetime.now(),
@@ -265,25 +272,26 @@ class HasSocial:
 
 
 @dataclass
-class CreditEdges:
+class SocialEdges:
     list_items: list[HasSocial]
 
     def __init__(self, ownerList):
-        self.list_items = oneToManyGen(len(ownerList.list_items), len(ownerList.list_items), 9)
-
-            # TODO: Insert a randomizing social function here
-            # HasSocial(i, len(ownerList.list_items))
-            # for i in range(0, len(ownerList.list_items))
+        items = oneToManyGen(len(ownerList.list_items), len(ownerList.list_items), 9)
+        self.list_items = [
+            HasSocial(items[i][0], items[i][1])
+            for i in range(0, len(items)-1)
+        ]
         self.metadata = EdgeMetaData(
-            name="HasSocial",
+            name="HasSocialConnections",
             parent="Owner",
-            fkid="owner_id",
+            fkid="dest_owner",
             label="KNOWS",
-            target="Owner"
+            source = "id",
+            target="Owner",
         )
 
     def genddl(self):
-        c = HasSocial(id=-1, ownerlen=1)
+        c = HasSocial(1, 2)
         name = c.__class__.__name__
         fields = []
         for field in HasSocial.__dataclass_fields__:
@@ -299,7 +307,7 @@ class CreditEdges:
         return tmpl
 
     def gendeclarationddl(self):
-        c = HasSocial(id=-1, ownerlen=1)
+        c = HasSocial(1, 2)
         name = c.__class__.__name__
         fields = []
         for field in HasSocial.__dataclass_fields__:
@@ -312,6 +320,7 @@ class CreditEdges:
             parent=self.metadata.parent,
             fkid=self.metadata.fkid,
             label=self.metadata.label,
+            source=self.metadata.source,
             target=self.metadata.target,
         )
         return tmpl

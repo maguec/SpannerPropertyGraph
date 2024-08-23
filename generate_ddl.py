@@ -15,6 +15,8 @@ if __name__ == "__main__":
     credit_reports = CreditReports()
     full_ddl.append(credit_reports.genddl())  # credit_reports.genddl()
     full_ddl.append("-- Edge Tables")
+    social = SocialEdges(owners)
+    full_ddl.append(social.genddl())
     credit_edges = CreditEdges(owners, credit_reports)
     full_ddl.append(credit_edges.genddl())  # credit_edges.genddl()
     county_edges = CountyEdges(properties, counties)
@@ -39,6 +41,7 @@ if __name__ == "__main__":
     full_ddl.append("  EDGE TABLES (")
     full_ddl.append("    " + property_edges.gendeclarationddl() + ",")
     full_ddl.append("    " + county_edges.gendeclarationddl()+ ",")
+    full_ddl.append("    " + social.gendeclarationddl() + ",")
     full_ddl.append("    " + credit_edges.gendeclarationddl())
     full_ddl.append(");")
 

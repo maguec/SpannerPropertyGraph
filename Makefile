@@ -27,3 +27,8 @@ dbclean: ## Remove all  table dat
 	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from InCounty WHERE id < 100000000;'
 	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from HasCreditReport WHERE id < 100000000;'
 	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from HasOwner WHERE id < 100000000;'
+	@gcloud spanner databases execute-sql propertydb  --instance=properties --sql='DELETE from HasSocial WHERE id < 100000000;'
+
+dbdrop: ## Drop all tables DANGER
+	@gcloud spanner databases  delete  propertydb --instance properties
+
