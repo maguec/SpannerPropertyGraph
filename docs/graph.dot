@@ -1,0 +1,15 @@
+digraph diag {
+  node [shape=Mrecord, color=Blue];
+  edge [fontcolor=darkgreen, color=darkgreen,fontsize=8];
+  nodesep=0.5;
+
+  Property [label="{<f0> Property|<f1> id\naddress\nbedrooms\nbathrooms\nprice}"];
+  County [label="{<f0> County|<f1> id\nname\ntax_rate\npostcode}"];
+  Owner [label="{<f0> Owner|<f1> id\nname\nssn}"];
+  CreditReport [label="{<f0> CreditReport|<f1> id\nscore\nbureau}"];
+
+  Property:f0 -> County:f0 [label=IN_COUNTY];
+  Property:f0 -> Owner:f0 [label=HAS_OWNER];
+  Owner:f0 -> CreditReport:f0 [label=HAS_CREDIT_REPORT];
+  Owner:f0 -> Owner:f0 [label=KNOWS,color=red, fontcolor=red];
+}

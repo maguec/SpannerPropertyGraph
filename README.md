@@ -1,4 +1,9 @@
-# Graph Example of Property Queries
+#  Property Graph
+
+## Buiding a Property Graph with Google Cloud Spanner
+
+![datasources](./docs/datasources.png)
+![graph](./docs/graph.png)
 
 ## Create the Spanner Instance
 
