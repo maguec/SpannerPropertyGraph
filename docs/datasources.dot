@@ -5,4 +5,5 @@ digraph diag {
   Owner [label="{<f0> Owner|<f1> id\nname\nssn}"];
   CreditReport [label="{<f0> CreditReport|<f1> id\nscore\nbureau}"];
   Social [label="{<f0> Social|<f1> source_id\ndest_ide\nsince}"];
+  Embedding [label="{<f0> Embedding|<f1> id\nembedding(768)}"];
 }
