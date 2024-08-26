@@ -66,5 +66,25 @@ RETURN o.name as OwnerName, ROUND((p.price*c.tax_rate/100),2) as TaxPaid, c.name
 ORDER BY TaxPaid DESC LIMIT 10
 ```
 
+## Find me 100 of Owner id 7's people up to thrice removed
+
+```
+GRAPH PropertyGraph
+MATCH (o:Owner{id: 7})-[e:KNOWS]->{1,3}(q:Owner)
+WHERE o != q
+RETURN o.name as SRC, q.name as DEST,  ARRAY_LENGTH(e) AS path_length
+ORDER BY path_length  LIMIT 100
+```
+
+## This query needs to get fixed but as a general idea of the power of influence
+
+```
+GRAPH PropertyGraph
+MATCH (o:Owner)-[e:KNOWS]->{0,2}(q:Owner)<-[:HAS_OWNER]-(p:Property)
+WHERE o != q
+RETURN o.name as SRC, sum(p.price) as assets
+ORDER BY assets DESC  LIMIT 25
+```
+
 ## [Hybrid Query Example](https://cloud.google.com/spanner/docs/reference/standard-sql/graph-sql-queries) - TODO
 
