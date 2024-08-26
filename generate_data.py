@@ -3,6 +3,7 @@
 from models.nodes import *
 from models.edges import *
 from models.utils import *
+from models.embeddings import *
 from google.cloud import spanner
 
 if __name__ == "__main__":
@@ -15,6 +16,8 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner,counties)
     properties = Properties(items=1000)
     client.run_in_transaction(writeSpanner, properties)
+    embeddings = Embeddings(items=len(properties.list_items))
+    client.run_in_transaction(writeSpanner, embeddings)
     credit_reports = CreditReports(items=len(owners.list_items))
     client.run_in_transaction(writeSpanner, credit_reports)
     in_county = CountyEdges(properties, counties)
@@ -25,4 +28,6 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner, has_credit)
     social = SocialEdges(owners)
     client.run_in_transaction(writeSpanner, social)
+    embedding_edges = EmbeddingEdges(properties)
+    client.run_in_transaction(writeSpanner, embedding_edges)
     

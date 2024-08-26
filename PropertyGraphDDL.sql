@@ -35,6 +35,10 @@ CREATE TABLE CreditReport (
       score		INT64 NOT NULL,
       bureau		STRING(MAX),
     ) PRIMARY KEY (id);
+CREATE TABLE Embedding (
+      id		INT64 NOT NULL,
+      embedding		ARRAY<FLOAT64>,
+    ) PRIMARY KEY (id);
 -- Edge Tables
 
 CREATE TABLE HasSocial (
@@ -70,13 +74,21 @@ CREATE TABLE HasOwner (
     FOREIGN KEY (owner_id) REFERENCES Property (id)
 ) PRIMARY KEY (id, owner_id),
   INTERLEAVE IN PARENT Property ON DELETE CASCADE;
+
+CREATE TABLE HasEmbedding (
+      id		INT64 NOT NULL,
+      dest_property		INT64 NOT NULL,
+    FOREIGN KEY (dest_property) REFERENCES Property (id)
+) PRIMARY KEY (id, dest_property),
+  INTERLEAVE IN PARENT Property ON DELETE CASCADE;
 -- Graph Declaration
 CREATE OR REPLACE PROPERTY GRAPH PropertyGraph
   NODE TABLES (
     County,
     Property,
     Owner,
-    CreditReport
+    CreditReport,
+    Embedding
   )
   EDGE TABLES (
     
@@ -98,5 +110,10 @@ HasSocial
 HasCreditReport
       SOURCE KEY (id) REFERENCES Owner (id)
       DESTINATION KEY (report_id) REFERENCES CreditReport (id)
-      LABEL HAS_CREDIT_REPORT
+      LABEL HAS_CREDIT_REPORT,
+    
+HasEmbedding
+      SOURCE KEY (id) REFERENCES Property (id)
+      DESTINATION KEY (dest_property) REFERENCES Property (id)
+      LABEL HAS_EMBEDDING
 );

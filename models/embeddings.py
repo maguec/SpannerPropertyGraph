@@ -27,22 +27,25 @@ REMOTE OPTIONS (
 """
 )
 
+NODE_DDL_TEMPLATE = Template(
+    """CREATE TABLE {{name}} (
+    {% for field in fields -%}
+    {{field}},
+    {% endfor -%}
+    ) PRIMARY KEY (id);
+"""
+)
+
 
 ##########################################################################################
 @dataclass
 class Embedding:
     id: int
-    name: str
-    tax_rate: Decimal
-    postcode: str
+    embedding: list[float]
 
     def __init__(self, id):
         self.id = id
-        self.name = fake.city()
-        self.tax_rate = (
-            fake.pydecimal(left_digits=0, right_digits=3, positive=True) * 10
-        )
-        self.postcode = fake.postcode()
+        self.embedding = [fake.pyfloat(min_value=-1.0, max_value=1.0) for _ in range(768)]
 
 
 @dataclass
@@ -52,7 +55,7 @@ class Embeddings:
     def __init__(self, items=10):
         self.list_items = [Embedding(id=i) for i in range(0, items)]
 
-    def genddl(self):
+    def genaiddl(self):
         project = os.environ.get('gcp_project_id')
         if not project:
             print('the environment variable gcp_project_id not set')
@@ -60,3 +63,13 @@ class Embeddings:
         tmpl = AI_DDL_TEMPLATE.render(project=project)
         return tmpl
 
+    def genddl(self):
+        c = Embedding(id=-1)
+        name = c.__class__.__name__
+        fields = []
+        for field in Embedding.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
+        return tmpl

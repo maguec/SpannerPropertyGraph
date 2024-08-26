@@ -324,3 +324,66 @@ class SocialEdges:
             target=self.metadata.target,
         )
         return tmpl
+##########################################################################################
+# Embeddings
+@dataclass
+class HasEmbedding:
+    id: int
+    dest_property: int
+
+    def __init__(self, id, propertylen):
+        self.id = id
+        self.dest_property = fake.random_int(min=0, max=propertylen - 1)
+
+@dataclass
+class EmbeddingEdges:
+    list_items: list[HasEmbedding]
+
+    def __init__(self, propertyList):
+        self.list_items = [
+            HasEmbedding(i, len(propertyList.list_items))
+            for i in range(0, len(propertyList.list_items))
+        ]
+        self.metadata = EdgeMetaData(
+            name="HasEmbedding",
+            parent="Property",
+            fkid="dest_property",
+            label="HAS_EMBEDDING",
+            source = "id",
+            target="Property",
+        )
+
+    def genddl(self):
+        c = HasEmbedding(1, 1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasEmbedding.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+        )
+        return tmpl
+
+    def gendeclarationddl(self):
+        c = HasEmbedding(1, 1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasEmbedding.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            source=self.metadata.source,
+            target=self.metadata.target,
+        )
+        return tmpl

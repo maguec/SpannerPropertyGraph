@@ -18,6 +18,7 @@ def typemap(t):
         "int": "INT64 NOT NULL",
         "str": "STRING(MAX)",
         "Decimal": "NUMERIC",  # https://cloud.google.com/spanner/docs/working-with-numerics
+        "list": "ARRAY<FLOAT64>",  # https://cloud.google.com/spanner/docs/arrays
     }
     return tmap[t]
 
