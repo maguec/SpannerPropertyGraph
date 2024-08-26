@@ -1,3 +1,16 @@
+-- AI Model
+
+CREATE MODEL EmbeddingsModel
+INPUT(content STRING(MAX))
+OUTPUT(
+  embeddings
+    STRUCT<
+      statistics STRUCT<truncated BOOL, token_count FLOAT64>,
+      values ARRAY<FLOAT64>>
+)
+REMOTE OPTIONS (
+  endpoint = '//aiplatform.googleapis.com/projects/mague-tf/locations/us-central1/publishers/google/models/textembedding-gecko@003'
+);
 -- Node Tables
 CREATE TABLE County (
       id		INT64 NOT NULL,

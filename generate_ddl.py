@@ -3,9 +3,13 @@
 from models.nodes import *
 from models.edges import *
 from models.utils import *
+from models.embeddings import *
 
 if __name__ == "__main__":
-    full_ddl = ["-- Node Tables"]
+    full_ddl = ["-- AI Model"]
+    embeddings = Embeddings()
+    full_ddl.append(embeddings.genddl())
+    full_ddl += ["-- Node Tables"]
     counties = Counties()
     full_ddl.append(counties.genddl())  # counties.genddl()
     properties = Properties()
