@@ -32,3 +32,11 @@ dbclean: ## Remove all  table dat
 dbdrop: ## Drop all tables DANGER
 	@gcloud spanner databases  delete  propertydb --instance properties
 
+
+instancecreate: ## Spin up a single node Spanner instance
+	@gcloud spanner instances create properties --description="Property Graph Database" --nodes=1 --config=regional-us-central1
+
+
+instancedelete: ## Shutdown the Spanner instance
+	@gcloud spanner instances delete properties
+
