@@ -5,6 +5,12 @@
 ![datasources](./docs/datasources.png)
 ![graph](./docs/graph.png)
 
+## Prerequisites
+
+- [Google Cloud SDK](https://cloud.google.com/sdk)
+- Python 3 or greater and Python PIP 
+- enable the Google Cloud SDK default login with `gcloud auth application-default login`
+
 ## Create the Spanner Instance
 
 ```bash
