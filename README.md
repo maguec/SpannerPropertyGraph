@@ -29,7 +29,7 @@ source .venv/bin/activate
 pip install -r requirements.txt 
 ```
 
-## Generate the CSV Datafiles
+## Load some sample data into the database
 
 ```bash
 export gcp_project_id="YOUR_PROJECT_ID"
