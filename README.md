@@ -32,6 +32,7 @@ pip install -r requirements.txt
 ## Generate the CSV Datafiles
 
 ```bash
+export gcp_project_id="YOUR_PROJECT_ID"
 python ./generate_data.py
 ```
 

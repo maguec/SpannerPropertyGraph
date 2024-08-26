@@ -34,7 +34,7 @@ dbdrop: ## Drop all tables DANGER
 
 
 instancecreate: ## Spin up a single node Spanner instance
-	@gcloud spanner instances create properties --description="Property Graph Database" --nodes=1 --config=regional-us-central1
+	@gcloud spanner instances create properties --description="Property Graph Database" --nodes=1 --config=regional-us-west1
 
 
 instancedelete: ## Shutdown the Spanner instance
