@@ -89,11 +89,13 @@ ORDER BY assets DESC  LIMIT 25
 ## [Hybrid Query Example](https://cloud.google.com/spanner/docs/reference/standard-sql/graph-sql-queries) 
 ## Find me all properties with a description that matches
 
+don't run for now
+
 ```
-SELECT embeddings.values
-FROM ML.PREDICT(
-  MODEL EmbeddingsModel,
-  (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
-);
+-- SELECT embeddings.values
+-- FROM ML.PREDICT(
+--   MODEL EmbeddingsModel,
+--   (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
+-- );
 ```
 
