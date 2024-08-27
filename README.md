@@ -14,7 +14,7 @@
 ## Create the Spanner Instance
 
 ```bash
-
+gcloud auth application-default login
 gcloud spanner instances create properties --description="Property Graph Database" --nodes=1 --config=regional-us-west1
 ```
 
