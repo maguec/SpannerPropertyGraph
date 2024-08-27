@@ -123,3 +123,13 @@ MATCH (o:Owner)-[EMPLOYED_BY]->(c:Company)
 WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
 RETURN o.name as owner, c.name as company, c.id as companyid, c.description limit 10
 ```
+
+### Sum up the prices by search entry point
+
+```
+GRAPH PropertyGraph
+MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)-[EMPLOYED_BY]->(c:Company)
+WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
+RETURN SUM(p.price) as total_value, c.name as company 
+GROUP BY company
+```
