@@ -86,17 +86,40 @@ RETURN o.name as SRC, sum(p.price) as assets
 ORDER BY assets DESC  LIMIT 25
 ```
 
-## [Hybrid Query Example](https://cloud.google.com/spanner/docs/reference/standard-sql/graph-sql-queries) 
-## Find me all properties with a description that matches
+## Vector Queries
+### Find me five closest properties to this description
 
-don't run for now
 
 ```
--- SELECT embeddings.values
--- FROM ML.PREDICT(
---   MODEL EmbeddingsModel,
---   (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
--- );
+SELECT id, COSINE_DISTANCE(
+  embedding, 
+  (SELECT embeddings.values
+    FROM ML.PREDICT(  MODEL EmbedsModel,
+      (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
+    )
+  )
+) as distance from Embed
+ORDER by distance LIMIT 5;
+```
+
+### Use a vector query as the entry point for more information
+
+```
+GRAPH PropertyGraph
+  MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
+  WHERE p.id IN (
+  SELECT id FROM(
+   SELECT id, COSINE_DISTANCE(
+     embedding,
+      (SELECT embeddings.values
+        FROM ML.PREDICT(  MODEL EmbedsModel,
+          (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
+        )
+      )
+    )
+   as distance from Embed ORDER by distance LIMIT 5
+  )
+) RETURN p.id, p.price, o.name as owner
 ```
 
 ## Search Queries

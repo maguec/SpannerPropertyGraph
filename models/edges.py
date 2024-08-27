@@ -325,9 +325,9 @@ class SocialEdges:
         )
         return tmpl
 ##########################################################################################
-# Embeddings
+# Embeds
 @dataclass
-class HasEmbedding:
+class HasEmbed:
     id: int
     dest_property: int
 
@@ -336,16 +336,16 @@ class HasEmbedding:
         self.dest_property = fake.random_int(min=0, max=propertylen - 1)
 
 @dataclass
-class EmbeddingEdges:
-    list_items: list[HasEmbedding]
+class EmbedEdges:
+    list_items: list[HasEmbed]
 
     def __init__(self, propertyList):
         self.list_items = [
-            HasEmbedding(i, len(propertyList.list_items))
+            HasEmbed(i, len(propertyList.list_items))
             for i in range(0, len(propertyList.list_items))
         ]
         self.metadata = EdgeMetaData(
-            name="HasEmbedding",
+            name="HasEmbed",
             parent="Property",
             fkid="dest_property",
             label="HAS_EMBEDDING",
@@ -354,10 +354,10 @@ class EmbeddingEdges:
         )
 
     def genddl(self):
-        c = HasEmbedding(1, 1)
+        c = HasEmbed(1, 1)
         name = c.__class__.__name__
         fields = []
-        for field in HasEmbedding.__dataclass_fields__:
+        for field in HasEmbed.__dataclass_fields__:
             fields.append(
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
@@ -370,10 +370,10 @@ class EmbeddingEdges:
         return tmpl
 
     def gendeclarationddl(self):
-        c = HasEmbedding(1, 1)
+        c = HasEmbed(1, 1)
         name = c.__class__.__name__
         fields = []
-        for field in HasEmbedding.__dataclass_fields__:
+        for field in HasEmbed.__dataclass_fields__:
             fields.append(
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )

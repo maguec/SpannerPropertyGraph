@@ -13,7 +13,7 @@ fake = Faker()
 
 AI_DDL_TEMPLATE = Template(
 """
-CREATE MODEL EmbeddingsModel
+CREATE MODEL EmbedsModel
 INPUT(content STRING(MAX))
 OUTPUT(
   embeddings
@@ -39,7 +39,7 @@ NODE_DDL_TEMPLATE = Template(
 
 ##########################################################################################
 @dataclass
-class Embedding:
+class Embed:
     id: int
     embedding: list[float]
 
@@ -49,11 +49,11 @@ class Embedding:
 
 
 @dataclass
-class Embeddings:
-    list_items: list[Embedding]
+class Embeds:
+    list_items: list[Embed]
 
     def __init__(self, items=10):
-        self.list_items = [Embedding(id=i) for i in range(0, items)]
+        self.list_items = [Embed(id=i) for i in range(0, items)]
 
     def genaiddl(self):
         project = os.environ.get('gcp_project_id')
@@ -64,10 +64,10 @@ class Embeddings:
         return tmpl
 
     def genddl(self):
-        c = Embedding(id=-1)
+        c = Embed(id=-1)
         name = c.__class__.__name__
         fields = []
-        for field in Embedding.__dataclass_fields__:
+        for field in Embed.__dataclass_fields__:
             fields.append(
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
