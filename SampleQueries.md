@@ -112,8 +112,14 @@ SELECT id, description From Company
 **Note you will need to find the tokens in the simulated data**
 
 ```
-SELECT id From Company WHERE SEARCH(description_Tokens, 'efficient OR platforms')
+SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME')
 ```
 
 ### Use the tokens to search
-TODO
+
+```
+GRAPH PropertyGraph
+MATCH (o:Owner)-[EMPLOYED_BY]->(c:Company)
+WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
+RETURN o.name as owner, c.name as company, c.id as companyid, c.description limit 10
+```
