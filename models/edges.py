@@ -387,3 +387,68 @@ class EmbeddingEdges:
             target=self.metadata.target,
         )
         return tmpl
+
+##########################################################################################
+# Companies
+@dataclass
+class HasCompany:
+    id: int
+    dest_employer: int
+
+    def __init__(self, id, companyId):
+        self.id = id
+        self.dest_employer = companyId
+
+@dataclass
+class CompanyEdges:
+    list_items: list[HasCompany]
+
+    def __init__(self, companyList, employeeList):
+        self.list_items = []
+        for i in range(0, len(employeeList.list_items) - 1):
+            self.list_items.append(
+                HasCompany(i, fake.random_int(min=0, max=len(companyList.list_items) - 1))
+            )
+        self.metadata = EdgeMetaData(
+            name="HasCompany",
+            parent="Owner",
+            fkid="dest_employer",
+            label="EMPLOYED_BY",
+            source = "id",
+            target="Company",
+        )
+
+    def genddl(self):
+        c = HasCompany(1, 1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasCompany.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DDL_TEMPLATE.render(
+            name=name,
+            fields=fields,
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+        )
+        return tmpl
+
+    def gendeclarationddl(self):
+        c = HasCompany(1, 1)
+        name = c.__class__.__name__
+        fields = []
+        for field in HasCompany.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = EDGE_TABLE_DECLARATION_DDL_TEMPLATE.render(
+            name=name,
+  
+            parent=self.metadata.parent,
+            fkid=self.metadata.fkid,
+            label=self.metadata.label,
+            source=self.metadata.source,
+            target=self.metadata.target,
+        )
+        return tmpl

@@ -18,6 +18,8 @@ if __name__ == "__main__":
     full_ddl.append(owners.genddl())  # owners.genddl()
     credit_reports = CreditReports()
     full_ddl.append(credit_reports.genddl())  # credit_reports.genddl()
+    companies = Companies()
+    full_ddl.append(companies.genddl())
     # full_ddl.append(embeddings.genddl())
     full_ddl.append("-- Edge Tables")
     social = SocialEdges(owners)
@@ -28,6 +30,8 @@ if __name__ == "__main__":
     full_ddl.append(county_edges.genddl())  # county_edges.genddl()
     property_edges = PropertyEdges(properties, owners)
     full_ddl.append(property_edges.genddl())  # property_edges.genddl()
+    company_edges = CompanyEdges(companies, owners)
+    full_ddl.append(company_edges.genddl())
     #embedding_edges = EmbeddingEdges(properties)
     #full_ddl.append(embedding_edges.genddl())
     full_ddl.append("-- Graph Declaration")
@@ -41,6 +45,7 @@ if __name__ == "__main__":
                 properties.list_items[0].__class__.__name__,
                 owners.list_items[0].__class__.__name__,
                 credit_reports.list_items[0].__class__.__name__,
+                companies.list_items[0].__class__.__name__,
                 #embeddings.list_items[0].__class__.__name__,
             ]
         )
@@ -50,6 +55,7 @@ if __name__ == "__main__":
     full_ddl.append("    " + property_edges.gendeclarationddl() + ",")
     full_ddl.append("    " + county_edges.gendeclarationddl() + ",")
     full_ddl.append("    " + social.gendeclarationddl() + ",")
+    full_ddl.append("    " + company_edges.gendeclarationddl() + ",")
     #full_ddl.append("    " + embedding_edges.gendeclarationddl() + ",")
     full_ddl.append("    " + credit_edges.gendeclarationddl())
     full_ddl.append(");")

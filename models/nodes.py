@@ -16,7 +16,16 @@ NODE_DDL_TEMPLATE = Template(
     {% for field in fields -%}
     {{field}},
     {% endfor -%}
+    {% for token in tokens -%}
+    {{token}}_Tokens TOKENLIST AS (TOKENIZE_FULLTEXT({{token}})) HIDDEN,
+    {% endfor -%}
     ) PRIMARY KEY (id);
+
+    {% for token in tokens -%}
+    CREATE SEARCH INDEX {{token}}Index
+    ON {{name}}({{token}}_Tokens)
+    ORDER BY id DESC;
+    {% endfor -%}
 """
 )
 
@@ -154,4 +163,35 @@ class CreditReports:
                 "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
             )
         tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields)
+        return tmpl
+
+##########################################################################################
+@dataclass
+class Company:
+    id: int
+    name: str
+    description: str
+
+    def __init__(self, id):
+        self.id = id
+        self.name = fake.company()
+        self.description = "A " + fake.catch_phrase() + " company that " + fake.bs()
+
+
+@dataclass
+class Companies:
+    list_items: list[Company]
+
+    def __init__(self, items=10):
+        self.list_items = [Company(id=i) for i in range(0, items)]
+
+    def genddl(self):
+        c = Company(id=-1)
+        name = c.__class__.__name__
+        fields = []
+        for field in Company.__dataclass_fields__:
+            fields.append(
+                "  {}\t\t{}".format(field, typemap(type(getattr(c, field)).__name__))
+            )
+        tmpl = NODE_DDL_TEMPLATE.render(name=name, fields=fields, tokens=["description"])
         return tmpl

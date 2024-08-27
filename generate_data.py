@@ -28,6 +28,10 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner, has_credit)
     social = SocialEdges(owners)
     client.run_in_transaction(writeSpanner, social)
+    companies = Companies(items=25)
+    client.run_in_transaction(writeSpanner, companies)
+    has_employee = CompanyEdges(companies, owners)
+    client.run_in_transaction(writeSpanner, has_employee)
     #embedding_edges = EmbeddingEdges(properties)
     #client.run_in_transaction(writeSpanner, embedding_edges)
     

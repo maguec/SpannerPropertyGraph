@@ -99,3 +99,21 @@ don't run for now
 -- );
 ```
 
+## Search Queries
+
+### Look over the company descriptions
+
+```
+SELECT id, description From Company
+```
+
+### Do a search for some tokens
+
+**Note you will need to find the tokens in the simulated data**
+
+```
+SELECT id From Company WHERE SEARCH(description_Tokens, 'efficient OR platforms')
+```
+
+### Use the tokens to search
+TODO
