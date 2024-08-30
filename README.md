@@ -3,9 +3,11 @@
 ## Buiding a Real Estate Property Graph with Google Cloud Spanner
 
 We are building the following tables of data about real estate properties, proerty owners, credit reports, and companies.
+
 ![datasources](./docs/datasources.png)
 
 The data is related to one another through the following graph relationships
+
 ![graph](./docs/graph.png)
 
 It is possible to combine [Vector search](https://cloud.google.com/blog/products/databases/how-spanner-vector-search-supports-generative-ai-apps), [Full Text Search](https://cloud.google.com/spanner/docs/full-text-search) and [Graph](https://cloud.google.com/spanner/docs/graph/overview) queries to get the most relevant results all from a single SQL compatable database that scales globally
