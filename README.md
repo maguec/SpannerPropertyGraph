@@ -16,7 +16,8 @@ It is possible to combine [Vector search](https://cloud.google.com/blog/products
 
 - [Google Cloud SDK](https://cloud.google.com/sdk)
 - Python 3 or greater and Python PIP 
-- enable the Google Cloud SDK default login with `gcloud auth application-default login`
+- [Working Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk)
+- A Google Cloud project
 - make
 
 ## Create the Spanner Instance
