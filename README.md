@@ -2,20 +2,26 @@
 
 ## Buiding a Real Estate Property Graph with Google Cloud Spanner
 
+We are building the following tables of data about real estate properties, proerty owners, credit reports, and companies.
 ![datasources](./docs/datasources.png)
+
+The data is related to one another through the following graph relationships
 ![graph](./docs/graph.png)
+
+It is possible to combine [Vector search](https://cloud.google.com/blog/products/databases/how-spanner-vector-search-supports-generative-ai-apps), [Full Text Search](https://cloud.google.com/spanner/docs/full-text-search) and [Graph](https://cloud.google.com/spanner/docs/graph/overview) queries to get the most relevant results all from a single SQL compatable database that scales globally
 
 ## Prerequisites
 
 - [Google Cloud SDK](https://cloud.google.com/sdk)
 - Python 3 or greater and Python PIP 
 - enable the Google Cloud SDK default login with `gcloud auth application-default login`
+- make
 
 ## Create the Spanner Instance
 
 ```bash
 gcloud auth application-default login
-gcloud spanner instances create properties --description="Property Graph Database" --nodes=1 --config=regional-us-west1
+make instancecreate
 ```
 
 ## Setup Python environment
@@ -30,21 +36,18 @@ pip install -r requirements.txt
 
 ```bash
 export gcp_project_id="YOUR_PROJECT_ID"
-python ./generate_ddl.py
+make genschema
 ```
 
 ## Create the database with the necessary DDL
 
 ```bash
-
-gcloud spanner databases create propertydb --instance  properties --ddl-file=PropertyGraphDDL.sql
-
+make loadschema
 ```
 
 ## Load some sample data into the database
 
 ```bash
-export gcp_project_id="YOUR_PROJECT_ID"
 python ./generate_data.py
 ```
 
