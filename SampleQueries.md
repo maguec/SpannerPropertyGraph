@@ -1,3 +1,7 @@
+# Sample Queries
+
+Here are some sample queries to get you started with progressively more complex queries.
+
 ## Show me a Property
  
 ```
@@ -6,6 +10,12 @@ MATCH (p:Property)
 RETURN p.address, p.bedrooms, p.bathrooms limit 10
 ```
 
+## Show me a Property using SQL
+Data is stored as SQL tables making it easy to read and write with SQL too
+
+```
+SELECT * from Property limit 10;
+```
 
 ## Show me a Property in my price range
  
@@ -58,6 +68,8 @@ GROUP BY c.bureau
 
 ## Who paid the most property tax in 2023?
 
+Here we get to a query that would be very long in SQL and very slow
+
 ```
 GRAPH PropertyGraph
 MATCH (o:Owner)<-[h:HAS_OWNER]-(p:Property)-[x:IN_COUNTY]->(c:County)
@@ -67,6 +79,8 @@ ORDER BY TaxPaid DESC LIMIT 10
 ```
 
 ## Find me 100 of Owner id 7's people up to thrice removed
+
+Basically a waste of time to try this using SQL, but super easy in Graph
 
 ```
 GRAPH PropertyGraph
@@ -86,7 +100,12 @@ RETURN o.name as SRC, sum(p.price) as assets
 ORDER BY assets DESC  LIMIT 25
 ```
 
+# Hybrid Queries
+
+Use Vector Search, Full Text Search and Graph to show the power of multi-model queries.
+
 ## Vector Queries
+
 ### Find me five closest properties to this description
 
 
@@ -119,7 +138,7 @@ GRAPH PropertyGraph
     )
    as distance from Embed ORDER by distance LIMIT 5
   )
-) RETURN p.id, p.price, o.name as owner
+) RETURN p.id, p.price, o.name as owner, p.bathrooms, p.bedrooms 
 ```
 
 ## Search Queries
@@ -127,7 +146,7 @@ GRAPH PropertyGraph
 ### Look over the company descriptions
 
 ```
-SELECT id, description From Company
+SELECT id, description From Company LIMIT 10;
 ```
 
 ### Do a search for some tokens
