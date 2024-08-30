@@ -4,6 +4,6 @@ digraph diag {
   County [label="{<f0> County|<f1> id\nname\ntax_rate\npostcode}"];
   Owner [label="{<f0> Owner|<f1> id\nname\nssn}"];
   CreditReport [label="{<f0> CreditReport|<f1> id\nscore\nbureau}"];
-  Social [label="{<f0> Social|<f1> source_id\ndest_ide\nsince}"];
+  Social [label="{<f0> Social|<f1> source_id\ndest_id\nsince}"];
   Embedding [label="{<f0> Embedding|<f1> id\nembedding(768)}"];
 }
