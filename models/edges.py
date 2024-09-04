@@ -118,14 +118,12 @@ class CountyEdges:
 @dataclass
 class HasOwner:
     id: int
-    property_id: int
     owner_id: int
     create_date: str
 
-    def __init__(self, id, propertylen, ownerlen):
+    def __init__(self, id, ownerlen):
         self.id = id
         self.owner_id = fake.random_int(min=0, max=ownerlen - 1)
-        self.property_id = fake.random_int(min=0, max=propertylen - 1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -138,8 +136,8 @@ class PropertyEdges:
 
     def __init__(self, propertyList, ownerList):
         self.list_items = [
-            HasOwner(i, len(propertyList.list_items), len(ownerList.list_items))
-            for i in range(0, len(ownerList.list_items))
+            HasOwner(i, len(ownerList.list_items))
+            for i in range(0, len(propertyList.list_items))
         ]
         self.metadata = EdgeMetaData(
             name="HasOwner",
@@ -151,7 +149,7 @@ class PropertyEdges:
         )
 
     def genddl(self):
-        c = HasOwner(id=-1, propertylen=1, ownerlen=1)
+        c = HasOwner(id=-1, ownerlen=1)
         name = c.__class__.__name__
         fields = []
         for field in HasOwner.__dataclass_fields__:
@@ -167,7 +165,7 @@ class PropertyEdges:
         return tmpl
 
     def gendeclarationddl(self):
-        c = HasOwner(id=-1, propertylen=1, ownerlen=1)
+        c = HasOwner(id=-1, ownerlen=1)
         name = c.__class__.__name__
         fields = []
         for field in HasOwner.__dataclass_fields__:
