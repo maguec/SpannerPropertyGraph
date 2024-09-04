@@ -46,13 +46,11 @@ class EdgeMetaData:
 class InCounty:
     id: int
     county_id: int
-    property_id: int
     create_date: str
 
-    def __init__(self, id, countylen, propertylen):
+    def __init__(self, id, countylen):
         self.id = id
         self.county_id = fake.random_int(min=0, max=countylen - 1)
-        self.property_id = fake.random_int(min=0, max=propertylen - 1)
         self.create_date = fake.date_time_between_dates(
             datetime_start=datetime.now() - relativedelta(years=3),
             datetime_end=datetime.now(),
@@ -66,20 +64,20 @@ class CountyEdges:
 
     def __init__(self, propertyList, countyList):
         self.list_items = [
-            InCounty(i, len(countyList.list_items), len(propertyList.list_items))
+            InCounty(i, len(countyList.list_items))
             for i in range(0, len(propertyList.list_items))
         ]
         self.metadata = EdgeMetaData(
             name="InCounty",
             parent="Property",
-            fkid="property_id",
+            fkid="county_id",
             label="IN_COUNTY",
             source="id",
             target="County"
         )
 
     def genddl(self):
-        c = InCounty(id=-1, countylen=1, propertylen=1)
+        c = InCounty(id=-1, countylen=1)
         name = c.__class__.__name__
         fields = []
         for field in InCounty.__dataclass_fields__:
@@ -95,7 +93,7 @@ class CountyEdges:
         return tmpl
 
     def gendeclarationddl(self):
-        c = InCounty(id=-1, countylen=1, propertylen=1)
+        c = InCounty(id=-1, countylen=1)
         name = c.__class__.__name__
         fields = []
         for field in InCounty.__dataclass_fields__:
