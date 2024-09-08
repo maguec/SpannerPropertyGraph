@@ -1,4 +1,4 @@
-#  Real Estate Property Graph
+# Real Estate Property Graph
 
 ## Buiding a Real Estate Property Graph with Google Cloud Spanner
 
