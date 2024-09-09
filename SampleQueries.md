@@ -4,7 +4,7 @@ Here are some sample queries to get you started with progressively more complex 
 
 ## Show me a Property
  
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property) 
 RETURN p.address, p.bedrooms, p.bathrooms limit 10
@@ -13,13 +13,13 @@ RETURN p.address, p.bedrooms, p.bathrooms limit 10
 ## Show me a Property using SQL
 Data is stored as SQL tables making it easy to read and write with SQL too
 
-```
+```sql
 SELECT * from Property limit 10;
 ```
 
 ## Show me a Property in my price range
  
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)  where p.price < 500000
 RETURN p.address, p.price, p.bedrooms, p.bathrooms 
@@ -28,7 +28,7 @@ ORDER BY p.price limit 10
 
 ## Show me some sales
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
 RETURN p.address,h.create_date, o.name limit 10
@@ -37,7 +37,7 @@ RETURN p.address,h.create_date, o.name limit 10
 ## Properties Sold After 1/1/23
 
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
 WHERE h.create_date > '2023-01-01'
@@ -47,7 +47,7 @@ RETURN p.address,h.create_date, o.name limit 10
 ## Top 10 Average price bedroom counts per Zip Code
 
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)-[x:IN_COUNTY]->(c:County)
 RETURN AVG(p.bedrooms) AS beds, AVG(p.price) AS price, c.postcode
@@ -58,7 +58,7 @@ LIMIT 10
 
 ## What is the spread on credit ratings for jumbo loan holders
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)-[:HAS_OWNER]->(o:Owner)-[:HAS_CREDIT_REPORT]->(c:CreditReport)
 WHERE p.price >= 766550
@@ -70,7 +70,7 @@ GROUP BY c.bureau
 
 Here we get to a query that would be very long in SQL and very slow
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (o:Owner)<-[h:HAS_OWNER]-(p:Property)-[x:IN_COUNTY]->(c:County)
 WHERE h.create_date <= '2023-21-31'
@@ -82,7 +82,7 @@ ORDER BY TaxPaid DESC LIMIT 10
 
 Basically a waste of time to try this using SQL, but super easy in Graph
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (o:Owner{id: 7})-[e:KNOWS]->{1,3}(q:Owner)
 WHERE o != q
@@ -92,7 +92,7 @@ ORDER BY path_length  LIMIT 100
 
 ## This query needs to get fixed but as a general idea of the power of influence
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (o:Owner)-[e:KNOWS]->{0,2}(q:Owner)<-[:HAS_OWNER]-(p:Property)
 WHERE o != q
@@ -109,7 +109,7 @@ Use Vector Search, Full Text Search and Graph to show the power of multi-model q
 ### Find me five closest properties to this description
 
 
-```
+```sql
 SELECT id, COSINE_DISTANCE(
   embedding, 
   (SELECT embeddings.values
@@ -123,7 +123,7 @@ ORDER BY distance LIMIT 5;
 
 ### Use a vector query as the entry point for more information
 
-```
+```sql
 GRAPH RealEstateGraph
   MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
   WHERE p.id IN (
@@ -145,7 +145,7 @@ GRAPH RealEstateGraph
 
 ### Look over the company descriptions
 
-```
+```sql
 SELECT id, description FROM Company LIMIT 10;
 ```
 
@@ -153,13 +153,13 @@ SELECT id, description FROM Company LIMIT 10;
 
 **Note you will need to find the tokens in the simulated data**
 
-```
+```sql
 SELECT id FROM Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME')
 ```
 
 ### Use the tokens to search
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (o:Owner)-[EMPLOYED_BY]->(c:Company)
 WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
@@ -168,7 +168,7 @@ RETURN o.name AS owner, c.name AS company, c.id AS companyid, c.description LIMI
 
 ### Sum up the prices by search entry point
 
-```
+```sql
 GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)-[EMPLOYED_BY]->(c:Company)
 WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
