@@ -5,7 +5,7 @@ Here are some sample queries to get you started with progressively more complex 
 ## Show me a Property
  
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property) 
 RETURN p.address, p.bedrooms, p.bathrooms limit 10
 ```
@@ -20,7 +20,7 @@ SELECT * from Property limit 10;
 ## Show me a Property in my price range
  
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)  where p.price < 500000
 RETURN p.address, p.price, p.bedrooms, p.bathrooms 
 ORDER BY p.price limit 10
@@ -29,7 +29,7 @@ ORDER BY p.price limit 10
 ## Show me some sales
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
 RETURN p.address,h.create_date, o.name limit 10
 ```
@@ -38,7 +38,7 @@ RETURN p.address,h.create_date, o.name limit 10
 
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
 WHERE h.create_date > '2023-01-01'
 RETURN p.address,h.create_date, o.name limit 10
@@ -48,21 +48,21 @@ RETURN p.address,h.create_date, o.name limit 10
 
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)-[x:IN_COUNTY]->(c:County)
-RETURN AVG(p.bedrooms) as beds, AVG(p.price) as price, c.postcode
-GROUP by c.postcode
-ORDER By price DESC
+RETURN AVG(p.bedrooms) AS beds, AVG(p.price) AS price, c.postcode
+GROUP BY c.postcode
+ORDER BY price DESC
 LIMIT 10
 ```
 
 ## What is the spread on credit ratings for jumbo loan holders
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)-[:HAS_OWNER]->(o:Owner)-[:HAS_CREDIT_REPORT]->(c:CreditReport)
 WHERE p.price >= 766550
-RETURN MIN(c.score) as min_score, MAX(c.score) as max_score, AVG(c.score) as avg_score, c.bureau
+RETURN MIN(c.score) AS min_score, MAX(c.score) AS max_score, AVG(c.score) AS avg_score, c.bureau
 GROUP BY c.bureau
 ```
 
@@ -71,10 +71,10 @@ GROUP BY c.bureau
 Here we get to a query that would be very long in SQL and very slow
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (o:Owner)<-[h:HAS_OWNER]-(p:Property)-[x:IN_COUNTY]->(c:County)
 WHERE h.create_date <= '2023-21-31'
-RETURN o.name as OwnerName, ROUND((p.price*c.tax_rate/100),2) as TaxPaid, c.name as County 
+RETURN o.name AS OwnerName, ROUND((p.price*c.tax_rate/100),2) AS TaxPaid, c.name AS County 
 ORDER BY TaxPaid DESC LIMIT 10
 ```
 
@@ -83,20 +83,20 @@ ORDER BY TaxPaid DESC LIMIT 10
 Basically a waste of time to try this using SQL, but super easy in Graph
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (o:Owner{id: 7})-[e:KNOWS]->{1,3}(q:Owner)
 WHERE o != q
-RETURN o.name as SRC, q.name as DEST,  ARRAY_LENGTH(e) AS path_length
+RETURN o.name AS SRC, q.name AS DEST,  ARRAY_LENGTH(e) AS path_length
 ORDER BY path_length  LIMIT 100
 ```
 
 ## This query needs to get fixed but as a general idea of the power of influence
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (o:Owner)-[e:KNOWS]->{0,2}(q:Owner)<-[:HAS_OWNER]-(p:Property)
 WHERE o != q
-RETURN o.name as SRC, sum(p.price) as assets
+RETURN o.name AS SRC, sum(p.price) AS assets
 ORDER BY assets DESC  LIMIT 25
 ```
 
@@ -113,32 +113,32 @@ Use Vector Search, Full Text Search and Graph to show the power of multi-model q
 SELECT id, COSINE_DISTANCE(
   embedding, 
   (SELECT embeddings.values
-    FROM ML.PREDICT(  MODEL EmbedsModel,
-      (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
+    FROM ML.PREDICT(  MODEL DescriptionModel,
+      (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" AS content)
     )
   )
-) as distance from Embed
-ORDER by distance LIMIT 5;
+) AS distance from Embed
+ORDER BY distance LIMIT 5;
 ```
 
 ### Use a vector query as the entry point for more information
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
   MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)
   WHERE p.id IN (
   SELECT id FROM(
    SELECT id, COSINE_DISTANCE(
      embedding,
       (SELECT embeddings.values
-        FROM ML.PREDICT(  MODEL EmbedsModel,
-          (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" as content)
+        FROM ML.PREDICT(  MODEL DescriptionModel,
+          (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" AS content)
         )
       )
     )
-   as distance from Embed ORDER by distance LIMIT 5
+   AS distance FROM Embed ORDER BY distance LIMIT 5
   )
-) RETURN p.id, p.price, o.name as owner, p.bathrooms, p.bedrooms 
+) RETURN p.id, p.price, o.name AS owner, p.bathrooms, p.bedrooms 
 ```
 
 ## Search Queries
@@ -146,7 +146,7 @@ GRAPH PropertyGraph
 ### Look over the company descriptions
 
 ```
-SELECT id, description From Company LIMIT 10;
+SELECT id, description FROM Company LIMIT 10;
 ```
 
 ### Do a search for some tokens
@@ -154,24 +154,24 @@ SELECT id, description From Company LIMIT 10;
 **Note you will need to find the tokens in the simulated data**
 
 ```
-SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME')
+SELECT id FROM Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME')
 ```
 
 ### Use the tokens to search
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (o:Owner)-[EMPLOYED_BY]->(c:Company)
 WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
-RETURN o.name as owner, c.name as company, c.id as companyid, c.description limit 10
+RETURN o.name AS owner, c.name AS company, c.id AS companyid, c.description LIMIT 10
 ```
 
 ### Sum up the prices by search entry point
 
 ```
-GRAPH PropertyGraph
+GRAPH RealEstateGraph
 MATCH (p:Property)-[h:HAS_OWNER]->(o:Owner)-[EMPLOYED_BY]->(c:Company)
 WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_ME OR CHANGE_ME'))
-RETURN SUM(p.price) as total_value, c.name as company 
+RETURN SUM(p.price) AS total_value, c.name AS company 
 GROUP BY company
 ```

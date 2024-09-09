@@ -321,7 +321,7 @@ class SocialEdges:
         )
         return tmpl
 ##########################################################################################
-# Embeds
+# Description
 @dataclass
 class HasEmbed:
     id: int

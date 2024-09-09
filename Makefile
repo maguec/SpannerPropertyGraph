@@ -6,13 +6,13 @@ help:  ## Display this help
 
 genschema: ## Generate Schema
 	@echo "Generating Schema"
-	@rm -f PropertyGraphDDL.sql
-	@python3 ./generate_ddl.py > PropertyGraphDDL.sql
+	@rm -f RealEstateGraphDDL.sql
+	@python3 ./generate_ddl.py > RealEstateGraphDDL.sql
 
 
 loadschema: ## Load Schema onto Spanner
 	@echo "Loading Schema"
-	@gcloud spanner databases create propertydb --instance  properties --ddl-file=PropertyGraphDDL.sql
+	@gcloud spanner databases create propertydb --instance  properties --ddl-file=RealEstateGraphDDL.sql
 
 clean: ## Remove all generated files
 	@rm -f *.csv

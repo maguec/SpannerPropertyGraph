@@ -16,7 +16,7 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner,counties)
     properties = Properties(items=1000)
     client.run_in_transaction(writeSpanner, properties)
-    embeddings = Embeds(items=len(properties.list_items))
+    embeddings = Description(items=len(properties.list_items))
     client.run_in_transaction(writeSpanner, embeddings)
     credit_reports = CreditReports(items=len(owners.list_items))
     client.run_in_transaction(writeSpanner, credit_reports)

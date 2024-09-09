@@ -7,7 +7,7 @@ from models.embeddings import *
 
 if __name__ == "__main__":
     full_ddl = ["-- AI Model"]
-    embeddings = Embeds()
+    embeddings = Description()
     full_ddl.append(embeddings.genaiddl())
     full_ddl += ["-- Node Tables"]
     counties = Counties()
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     embedding_edges = EmbedEdges(properties)
     full_ddl.append(embedding_edges.genddl())
     full_ddl.append("-- Graph Declaration")
-    full_ddl.append("CREATE OR REPLACE PROPERTY GRAPH PropertyGraph")
+    full_ddl.append("CREATE OR REPLACE PROPERTY GRAPH RealEstateGraph")
     full_ddl.append("  NODE TABLES (")
     full_ddl.append(
         "    "

@@ -13,7 +13,7 @@ fake = Faker()
 
 AI_DDL_TEMPLATE = Template(
 """
-CREATE MODEL EmbedsModel
+CREATE MODEL DescriptionModel
 INPUT(content STRING(MAX))
 OUTPUT(
   embeddings
@@ -49,7 +49,7 @@ class Embed:
 
 
 @dataclass
-class Embeds:
+class Description:
     list_items: list[Embed]
 
     def __init__(self, items=10):

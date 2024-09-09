@@ -7,11 +7,11 @@ digraph diag {
   County [label="County"];
   Owner [label="Owner"];
   CreditReport [label="CreditReport"];
-  Embeds [label="Embeddings"];
+  Description [label="Descriptions"];
 
   Property -> County [label=IN_COUNTY];
   Property -> Owner [label=HAS_OWNER];
   Owner -> CreditReport [label=HAS_CREDIT_REPORT];
   Owner -> Owner [label=KNOWS,color=red, fontcolor=red];
-  Embeds -> Property [label=HAS_EMBEDDING];
+  Description -> Property [label=HAS_EMBEDDING];
 }
