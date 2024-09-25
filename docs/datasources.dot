@@ -6,4 +6,5 @@ digraph diag {
   CreditReport [label="{<f0> CreditReport|<f1> id\nscore\nbureau}"];
   Social [label="{<f0> Social|<f1> source_id\ndest_id\nsince}"];
   Description [label="{<f0> Description|<f1> id\nembedding(768)}"];
+  Company [label="{<f0> Company|<f1> id\nname\ndescription}"];
 }
