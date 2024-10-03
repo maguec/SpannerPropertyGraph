@@ -90,6 +90,22 @@ RETURN o.name AS SRC, q.name AS DEST,  ARRAY_LENGTH(e) AS path_length
 ORDER BY path_length  LIMIT 100
 ```
 
+## Add a New Owner and some relationships and query the graph
+
+```sql
+INSERT into Owner (id, name, ssn) values (100000, "Gary Lee Weinrib", "21122112");
+INSERT into HasSocial(id, dest_owner, since) values (100000, 7, "2012-07-04 12:00:00");
+INSERT into HasSocial(id, dest_owner, since) values (100000, 24, "20125-07-04 12:00:00");
+```
+
+```sql
+GRAPH RealEstateGraph
+MATCH (o:Owner{id: 100000})-[e:KNOWS]->{3,4}(q:Owner)
+WHERE o != q
+RETURN o.name AS SRC, q.name AS DEST,  ARRAY_LENGTH(e) AS path_length
+ORDER BY path_length  LIMIT 10
+```
+
 ## This query needs to get fixed but as a general idea of the power of influence
 
 ```sql
