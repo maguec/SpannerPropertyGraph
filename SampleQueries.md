@@ -148,7 +148,9 @@ GRAPH RealEstateGraph
      embedding,
       (SELECT embeddings.values
         FROM ML.PREDICT(  MODEL DescriptionModel,
-          (SELECT "A Tudor House with charm and hardwood floors that needs some remodeling" AS content)
+          ( SELECT 
+            "A Tudor House with charm and hardwood floors for remodeling"
+            AS content)
         )
       )
     )
