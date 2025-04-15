@@ -1,4 +1,8 @@
-# Real Estate Property Graph
+# Real Estate Knowledge Graph
+
+This is an example of a [Knowledge Graph](https://en.wikipedia.org/wiki/Knowledge_graph) or Metadata Catalog where several different data sources are linked together in a Spanner Graph Database.
+
+Graph backed Knowledge Graphs are optimized for answering complex questions that would be either too complex or slow using standard SQL.
 
 ## Buiding a Real Estate Property Graph with Google Cloud Spanner
 
