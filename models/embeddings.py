@@ -22,7 +22,7 @@ OUTPUT(
       values ARRAY<FLOAT64>>
 )
 REMOTE OPTIONS (
-  endpoint = '//aiplatform.googleapis.com/projects/{{project}}/locations/us-central1/publishers/google/models/textembedding-gecko@003'
+  endpoint = '//aiplatform.googleapis.com/projects/{{project}}/locations/us-central1/publishers/google/models/text-embedding-005'
 );
 """
 )
