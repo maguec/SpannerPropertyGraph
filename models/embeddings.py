@@ -12,7 +12,7 @@ fake = Faker()
 
 
 AI_DDL_TEMPLATE = Template(
-"""
+    """
 CREATE MODEL DescriptionModel
 INPUT(content STRING(MAX))
 OUTPUT(
@@ -22,7 +22,7 @@ OUTPUT(
       values ARRAY<FLOAT64>>
 )
 REMOTE OPTIONS (
-  endpoint = '//aiplatform.googleapis.com/projects/{{project}}/locations/us-central1/publishers/google/models/text-embedding-005'
+  endpoint = '//aiplatform.googleapis.com/projects/{{project}}/locations/{{region}}/publishers/google/models/text-embedding-004'
 );
 """
 )
@@ -45,7 +45,9 @@ class Embed:
 
     def __init__(self, id):
         self.id = id
-        self.embedding = [fake.pyfloat(min_value=-1.0, max_value=1.0) for _ in range(768)]
+        self.embedding = [
+            fake.pyfloat(min_value=-1.0, max_value=1.0) for _ in range(768)
+        ]
 
 
 @dataclass
@@ -56,11 +58,12 @@ class Description:
         self.list_items = [Embed(id=i) for i in range(0, items)]
 
     def genaiddl(self):
-        project = os.environ.get('gcp_project_id')
+        project = os.environ.get("gcp_project_id")
+        region = os.getenv("GOOGLE_CLOUD_REGION", "us-west1")
         if not project:
-            print('the environment variable gcp_project_id not set')
+            print("the environment variable gcp_project_id not set")
             exit(1)
-        tmpl = AI_DDL_TEMPLATE.render(project=project)
+        tmpl = AI_DDL_TEMPLATE.render(project=project, region=region)
         return tmpl
 
     def genddl(self):
