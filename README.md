@@ -23,20 +23,13 @@ It is possible to combine [Vector search](https://cloud.google.com/blog/products
 - [Working Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk)
 - A Google Cloud project
 - make
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ## Create the Spanner Instance
 
 ```bash
 gcloud auth application-default login
 make instancecreate
-```
-
-## Setup Python environment
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt 
 ```
 
 ## Generate your Property Graph DDL
@@ -55,7 +48,7 @@ make loadschema
 ## Load some sample data into the database
 
 ```bash
-python ./generate_data.py
+make loaddata
 ```
 
 ## Check out some of the queries you can run

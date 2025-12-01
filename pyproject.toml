@@ -1,0 +1,13 @@
+[project]
+name = "propertygraph"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dataclass-csv>=1.4.0",
+    "faker>=38.2.0",
+    "google-cloud-spanner>=3.59.0",
+    "jinja2>=3.1.6",
+    "setuptools>=80.9.0",
+]

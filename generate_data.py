@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import os
 from models.nodes import *
 from models.edges import *
 from models.utils import *
@@ -8,12 +9,13 @@ from google.cloud import spanner
 
 if __name__ == "__main__":
     s = spanner.Client()
-    instance = s.instance("properties")
+    spanner_insance_name = os.getenv("GOOGLE_CLOUD_SPANNER_INSTANCE", "properties")
+    instance = s.instance(spanner_insance_name)
     client = instance.database("propertydb")
     owners = Owners(items=550)
-    client.run_in_transaction(writeSpanner,owners)
+    client.run_in_transaction(writeSpanner, owners)
     counties = Counties(items=60)
-    client.run_in_transaction(writeSpanner,counties)
+    client.run_in_transaction(writeSpanner, counties)
     properties = Properties(items=1000)
     client.run_in_transaction(writeSpanner, properties)
     embeddings = Description(items=len(properties.list_items))
@@ -34,4 +36,3 @@ if __name__ == "__main__":
     client.run_in_transaction(writeSpanner, has_employee)
     embedding_edges = EmbedEdges(properties)
     client.run_in_transaction(writeSpanner, embedding_edges)
-    
