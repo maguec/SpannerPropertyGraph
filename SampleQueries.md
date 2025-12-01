@@ -193,3 +193,15 @@ WHERE c.id IN (SELECT id From Company WHERE SEARCH(description_Tokens, 'CHANGE_M
 RETURN SUM(p.price) AS total_value, c.name AS company 
 GROUP BY company
 ```
+
+### Using Full Text Search - find all emails linked through devices that have alexis and org somewhere in the email
+
+```sql
+GRAPH UserIdentity
+MATCH (e:Email)-[h:HAS_DEVICE]->(d:Device)<-[h2:HAS_DEVICE]-(e2:Email)
+WHERE e.id IN (
+  SELECT id from Email WHERE
+  SEARCH_NGRAMS(email_Tokens, 'alexis AND org')
+  )
+RETURN e.email as Email, d.id as Device, e2.email as Email2
+```
